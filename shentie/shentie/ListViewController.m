@@ -7,6 +7,7 @@
 //
 
 #import "ListViewController.h"
+#import <MBProgressHUD/MBProgressHUD.h>
 
 @interface ListViewController ()
 
@@ -26,10 +27,9 @@
 
 - (void)setupStyle {
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        [self.listWebView setBounds:CGRectMake(0,
-                                            20,
-                                            self.listWebView.frame.size.width,
-                                            self.listWebView.frame.size.height - 20)];
+        self.listWebView.frame = CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
+    } else {
+        self.listWebView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
     }
 }
 
@@ -37,17 +37,21 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self setupStyle];
-    
     self.listWebView.scalesPageToFit = YES;
     self.listWebView.delegate = self;
     NSURL *url = [NSURL URLWithString:@"http://m.taobao.com"];
     NSURLRequest *reqObj = [NSURLRequest requestWithURL:url];
     [self.listWebView loadRequest:reqObj];
+    [MBProgressHUD showHUDAddedTo:self.listWebView animated:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self setupStyle];
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView {
-    NSLog(@"web view load finished");
+    [MBProgressHUD hideAllHUDsForView:self.listWebView animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
