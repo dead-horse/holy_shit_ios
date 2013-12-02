@@ -8,24 +8,18 @@
 
 #import "ListViewController.h"
 #import <MBProgressHUD/MBProgressHUD.h>
+#import "DetailViewController.h"
 
 @interface ListViewController ()
-@property (strong, nonatomic) NSMutableDictionary *callbacks;
 - (void)sendMessage:(NSString *)key message:(NSDictionary *)data;
 - (void)dispatchMessage: (NSString *)key message:(NSDictionary *)data;
-- (void)onMessage:(NSString *)key handle:(BridageCallback)callback;
+@property (nonatomic, strong) NSString *selectedUrl;
+@property (nonatomic, strong) NSNumber *selectedId;
 @end
 
 @implementation ListViewController
 @synthesize listWebView = _listWebView;
-@synthesize callbacks = _callbacks;
-
-- (NSMutableDictionary *)callbacks {
-    if (!_callbacks) {
-        _callbacks = [NSMutableDictionary dictionary];
-    }
-    return _callbacks;
-}
+@synthesize listContainerView = _listContainerView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,9 +32,7 @@
 
 - (void)setupStyle {
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        self.listWebView.frame = CGRectMake(0, 20, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
-    } else {
-        self.listWebView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 20);
+        self.edgesForExtendedLayout = UIRectEdgeNone;
     }
 }
 
@@ -48,6 +40,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [self setupStyle];
     self.listWebView.scalesPageToFit = YES;
     self.listWebView.delegate = self;
     NSURL *url = [NSURL URLWithString:LIST_URL];
@@ -58,7 +51,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self setupStyle];
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView {
@@ -100,19 +92,18 @@
     [self.listWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
-- (void)onMessage:(NSString *)key handle:(BridageCallback)callback {
-    if (callback) {
-        NSLog(@"绑定消息%@", key);
-        self.callbacks[key] = [callback copy];
+- (void)dispatchMessage:(NSString *)key message:(NSDictionary *)data {
+    NSLog(@"分发消息, Key: %@, Value: %@", key, [data JSONString]);
+    if ([key isEqualToString:@"openPost"]) {
+        self.selectedId = data[@"id"];
+        self.selectedUrl = data[@"url"];
+        [self performSegueWithIdentifier:@"listToDetail" sender:self];
     }
 }
 
-- (void)dispatchMessage:(NSString *)key message:(NSDictionary *)data {
-    NSLog(@"分发消息, Key: %@, Value: %@", key, [data JSONString]);
-    BridageCallback callback = self.callbacks[key];
-    if (callback) {
-        callback(data);
-    }
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    DetailViewController *target = segue.destinationViewController;
+    [target setUrl:self.selectedUrl andId:self.selectedId];
 }
 
 

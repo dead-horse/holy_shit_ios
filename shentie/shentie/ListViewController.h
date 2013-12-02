@@ -11,6 +11,7 @@
 typedef void (^BridageCallback)(id responseData);
 
 @interface ListViewController : UIViewController <UIWebViewDelegate>
+@property (strong, nonatomic) IBOutlet UIView *listContainerView;
 @property (weak, nonatomic) IBOutlet UIWebView *listWebView;
 
 @end
