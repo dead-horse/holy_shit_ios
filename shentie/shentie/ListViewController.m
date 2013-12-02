@@ -10,11 +10,22 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 
 @interface ListViewController ()
-
+@property (strong, nonatomic) NSMutableDictionary *callbacks;
+- (void)sendMessage:(NSString *)key message:(NSDictionary *)data;
+- (void)dispatchMessage: (NSString *)key message:(NSDictionary *)data;
+- (void)onMessage:(NSString *)key handle:(BridageCallback)callback;
 @end
 
 @implementation ListViewController
 @synthesize listWebView = _listWebView;
+@synthesize callbacks = _callbacks;
+
+- (NSMutableDictionary *)callbacks {
+    if (!_callbacks) {
+        _callbacks = [NSMutableDictionary dictionary];
+    }
+    return _callbacks;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,6 +63,28 @@
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView {
     [MBProgressHUD hideAllHUDsForView:self.listWebView animated:YES];
+
+    //注入message.js脚本
+    
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"message" ofType:@"js"];
+    NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    [webView stringByEvaluatingJavaScriptFromString:script];
+}
+
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    NSLog(@"出了什么错？%@", error);
+}
+
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSURL *url = request.URL;
+    NSLog(@"访问地址%@", url);
+    if ([url.scheme isEqualToString:@"bridge"]) {
+        NSString *event = url.host;
+        NSDictionary *data = [[url.path substringFromIndex:1] objectFromJSONString];
+        [self dispatchMessage:event message:data];
+        return NO;
+    }
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,5 +92,28 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma bridage
+- (void)sendMessage:(NSString *)key message:(NSDictionary *)data {
+    NSString *js = [NSString stringWithFormat:@"window.bridge.dispatch('%@', %@);", key, [data JSONString]];
+    NSLog(@"js string: %@", js);
+    [self.listWebView stringByEvaluatingJavaScriptFromString:js];
+}
+
+- (void)onMessage:(NSString *)key handle:(BridageCallback)callback {
+    if (callback) {
+        NSLog(@"绑定消息%@", key);
+        self.callbacks[key] = [callback copy];
+    }
+}
+
+- (void)dispatchMessage:(NSString *)key message:(NSDictionary *)data {
+    NSLog(@"分发消息, Key: %@, Value: %@", key, [data JSONString]);
+    BridageCallback callback = self.callbacks[key];
+    if (callback) {
+        callback(data);
+    }
+}
+
 
 @end

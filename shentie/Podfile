@@ -1,3 +1,4 @@
 platform :ios, '6.0'
 pod 'AFNetworking', '~> 2.0.3'
 pod 'MBProgressHUD', '~> 0.8'
+pod 'JSONKit',:git => 'git@github.com:matsu911/JSONKit.git'
