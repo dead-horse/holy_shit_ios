@@ -39,7 +39,7 @@
 	// Do any additional setup after loading the view.
     self.listWebView.scalesPageToFit = YES;
     self.listWebView.delegate = self;
-    NSURL *url = [NSURL URLWithString:@"http://m.taobao.com"];
+    NSURL *url = [NSURL URLWithString:LIST_URL];
     NSURLRequest *reqObj = [NSURLRequest requestWithURL:url];
     [self.listWebView loadRequest:reqObj];
     [MBProgressHUD showHUDAddedTo:self.listWebView animated:YES];

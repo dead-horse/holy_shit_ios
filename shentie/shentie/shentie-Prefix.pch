@@ -16,3 +16,5 @@
 #endif
 
 #import "MacroDefinition.h"
+
+#define LIST_URL @"http://crazyapp.net/h5/list"
