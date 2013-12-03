@@ -41,4 +41,14 @@
         [self.delegate postGoodByIdCallback:nil error:error];
     }];
 }
+
+- (void)postViewById:(NSNumber *)postId {
+    NSString *path = [NSString stringWithFormat:@"/api/posts/%@/view", postId];
+    [self.manager PATCH:path parameters:Nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self.delegate postViewByIdCallback:responseObject error:nil];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self.delegate postViewByIdCallback:nil error:error];
+    }];
+}
+
 @end

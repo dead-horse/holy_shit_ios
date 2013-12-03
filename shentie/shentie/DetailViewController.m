@@ -87,6 +87,8 @@
     NSURLRequest *reqObj = [NSURLRequest requestWithURL:url];
     [self.detailWebView loadRequest:reqObj];
     
+    [self.postsRequest postViewById:self.post[@"id"]];
+    
     [MBProgressHUD showHUDAddedTo:self.detailWebView animated:YES];
 }
 
@@ -124,11 +126,19 @@
     // Dispose of any resources that can be recreated.
 }
 
+// posts request delegate
 - (void)postGoodByIdCallback:(NSDictionary *)result error:(NSError *)err {
     if (err) {
         NSLog(@"get error when post good, %@", err);
         return;
     }
     self.goodLabel.text = [NSString stringWithFormat:@"%d", [self.post[@"good_num"] intValue] + 1];
+}
+
+- (void)postViewByIdCallback:(NSDictionary *)result error:(NSError *)err {
+    if (err) {
+        NSLog(@"get error when post good, %@", err);
+        return;
+    }
 }
 @end

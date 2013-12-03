@@ -21,4 +21,5 @@
 
 //post request delegate
 - (void)postGoodByIdCallback:(NSDictionary *)result error:(NSError *)err;
+- (void)postViewByIdCallback:(NSDictionary *)result error:(NSError *)err;
 @end
