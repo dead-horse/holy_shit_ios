@@ -13,13 +13,14 @@
 @interface ListViewController ()
 - (void)sendMessage:(NSString *)key message:(NSDictionary *)data;
 - (void)dispatchMessage: (NSString *)key message:(NSDictionary *)data;
-@property (nonatomic, strong) NSString *selectedUrl;
-@property (nonatomic, strong) NSNumber *selectedId;
+@property (strong, nonatomic)NSDictionary *selectedPost;
+
 @end
 
 @implementation ListViewController
 @synthesize listWebView = _listWebView;
 @synthesize listContainerView = _listContainerView;
+@synthesize selectedPost = _selectedPost;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -95,15 +96,14 @@
 - (void)dispatchMessage:(NSString *)key message:(NSDictionary *)data {
     NSLog(@"分发消息, Key: %@, Value: %@", key, [data JSONString]);
     if ([key isEqualToString:@"openPost"]) {
-        self.selectedId = data[@"id"];
-        self.selectedUrl = data[@"url"];
+        self.selectedPost = [data copy];
         [self performSegueWithIdentifier:@"listToDetail" sender:self];
     }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     DetailViewController *target = segue.destinationViewController;
-    [target setUrl:self.selectedUrl andId:self.selectedId];
+    [target setupData:self.selectedPost];
 }
 
 

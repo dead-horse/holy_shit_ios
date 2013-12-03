@@ -8,17 +8,27 @@
 
 #import "DetailViewController.h"
 #import <MBProgressHUD/MBProgressHUD.h>
+#import "PostsRequest.h"
 
 @interface DetailViewController ()
-@property (nonatomic, strong) NSString *url;
-@property (nonatomic, strong) NSNumber *id;
+@property (nonatomic, strong) PostsRequest *postsRequest;
+@property (nonatomic, strong) NSDictionary *post;
+@property BOOL hasPostGood;
 @end
 
 @implementation DetailViewController
 @synthesize detailWebView = _detailWebView;
 @synthesize detailContainerView = _detailContainerView;
-@synthesize url = _url;
-@synthesize id = _id;
+@synthesize postsRequest = _postsRequest;
+@synthesize post = _post;
+
+- (PostsRequest *)postsRequest {
+    if (!_postsRequest) {
+        _postsRequest = [[PostsRequest alloc] init];
+        _postsRequest.delegate = self;
+    }
+    return _postsRequest;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,9 +39,8 @@
     return self;
 }
 
-- (void) setUrl:(NSString *)url andId:(NSNumber *)id {
-    self.url = url;
-    self.id = id;
+- (void)setupData:(NSDictionary *)data {
+    self.post = [data copy];
 }
 
 - (void)setupStyle {
@@ -45,17 +54,15 @@
         barView.alpha = 1.0f;
         barView.backgroundColor = barColour;
         [self.detailContainerView addSubview:barView];
-        NSLog(@"%f, %f, %f", self.detailWebView.frame.origin.y ,self.detailWebView.frame.size.height,
-              SCREEN_HEIGHT);
         self.detailWebView.frame = CGRectMake(0,
                                               self.detailWebView.frame.origin.y - 20,
                                               self.detailWebView.frame.size.width,
                                               self.detailWebView.frame.size.height + 20);
-        NSLog(@"%f, %f, %f", self.detailWebView.frame.origin.y ,self.detailWebView.frame.size.height,
-              SCREEN_HEIGHT);
     }
     UIColor *controllerContainerColour = [UIColor colorWithRed:0 green:219 / 255.0 blue: 222 / 255.0 alpha:1.00f];
     self.controllerContainerView.backgroundColor = controllerContainerColour;
+    
+    self.goodLabel.text = [NSString stringWithFormat:@"%@", self.post[@"good_num"]];
 }
 
 - (void)initControllerBar {
@@ -68,15 +75,18 @@
 	// Do any additional setup after loading the view.
     
     //must have url and id
-    if (!self.url || !self.id) {
+    if (!self.post[@"url"] || !self.post[@"id"]) {
         return;
     }
     [self setupStyle];
+    
+    //start webview
     self.detailWebView.scalesPageToFit = YES;
     self.detailWebView.delegate = self;
-    NSURL *url = [NSURL URLWithString:self.url];
+    NSURL *url = [NSURL URLWithString:self.post[@"url"]];
     NSURLRequest *reqObj = [NSURLRequest requestWithURL:url];
     [self.detailWebView loadRequest:reqObj];
+    
     [MBProgressHUD showHUDAddedTo:self.detailWebView animated:YES];
 }
 
@@ -102,6 +112,10 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (IBAction)goodBtnClick:(id)sender {
+    if (!self.hasPostGood) {
+        [self.postsRequest postGoodById:self.post[@"id"]];
+        self.hasPostGood = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -110,4 +124,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)postGoodByIdCallback:(NSDictionary *)result error:(NSError *)err {
+    if (err) {
+        NSLog(@"get error when post good, %@", err);
+        return;
+    }
+    self.goodLabel.text = [NSString stringWithFormat:@"%d", [self.post[@"good_num"] intValue] + 1];
+}
 @end

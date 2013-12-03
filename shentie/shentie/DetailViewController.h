@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PostsRequest.h"
 
-@interface DetailViewController : UIViewController <UIWebViewDelegate>
+@interface DetailViewController : UIViewController <UIWebViewDelegate, PostRequestDelegate>
 @property (weak, nonatomic) IBOutlet UIView *detailContainerView;
 @property (weak, nonatomic) IBOutlet UIWebView *detailWebView;
 @property (weak, nonatomic) IBOutlet UIButton *backBtn;
@@ -16,5 +17,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *goodLabel;
 @property (weak, nonatomic) IBOutlet UIView *controllerContainerView;
 
-- (void) setUrl:(NSString *)url andId:(NSNumber *)id;
+- (void) setupData: (NSDictionary *)data;
+
+//post request delegate
+- (void)postGoodByIdCallback:(NSDictionary *)result error:(NSError *)err;
 @end

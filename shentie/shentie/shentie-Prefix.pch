@@ -22,7 +22,9 @@
 
 #ifdef DEV_ENV
     #define LIST_URL @"http://127.0.0.1:7001/h5/list"
+    #define BASE_URL @"http://127.0.0.1:7001"
 #else
     #define LIST_URL @"http://crazyapp.net/h5/list"
+    #define BASE_URL @"http://crazyapp.net"
 #endif
 
