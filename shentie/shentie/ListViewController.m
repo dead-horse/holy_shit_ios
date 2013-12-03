@@ -56,7 +56,9 @@
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView {
     [MBProgressHUD hideAllHUDsForView:self.listWebView animated:YES];
-
+    
+    //remove all cached post
+    [Cache removeAllValueByCat:POSTS_PREFIX];
     //注入message.js脚本
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"message" ofType:@"js"];

@@ -12,7 +12,7 @@
 
 @interface DetailViewController ()
 @property (nonatomic, strong) PostsRequest *postsRequest;
-@property (nonatomic, strong) NSDictionary *post;
+@property (nonatomic, strong) NSMutableDictionary *post;
 @property BOOL hasPostGood;
 @end
 
@@ -40,7 +40,17 @@
 }
 
 - (void)setupData:(NSDictionary *)data {
-    self.post = [data copy];
+    if (!data[@"id"]) {
+        return;
+    }
+    //get from cache
+    NSDictionary *cacheValue = [Cache getValueByKey:[data[@"id"] stringValue] andCat:POSTS_PREFIX];
+    if (cacheValue) {
+        self.post = [cacheValue mutableCopy];
+    } else {
+        self.post = [data mutableCopy];
+        [Cache setValue:data withKey:[data[@"id"] stringValue] andCat:POSTS_PREFIX];
+    }
 }
 
 - (void)setupStyle {
@@ -132,7 +142,11 @@
         NSLog(@"get error when post good, %@", err);
         return;
     }
-    self.goodLabel.text = [NSString stringWithFormat:@"%d", [self.post[@"good_num"] intValue] + 1];
+    NSNumber *goodNum = [NSNumber numberWithInt:[self.post[@"good_num"] intValue] + 1];
+    //change the cache
+    self.post[@"good_num"] = goodNum;
+    self.goodLabel.text = [NSString stringWithFormat:@"%@", goodNum];
+    [Cache setValue:[self.post copy] withKey:[self.post[@"id"] stringValue] andCat:POSTS_PREFIX];
 }
 
 - (void)postViewByIdCallback:(NSDictionary *)result error:(NSError *)err {

@@ -17,6 +17,7 @@
 #endif
 
 #import "MacroDefinition.h"
+#import "Cache.h"
 
 //#define DEV_ENV
 
@@ -28,3 +29,4 @@
     #define BASE_URL @"http://crazyapp.net"
 #endif
 
+#define POSTS_PREFIX @"posts"
