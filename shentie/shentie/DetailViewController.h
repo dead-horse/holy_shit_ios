@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PostsRequest.h"
 
-@interface DetailViewController : UIViewController <UIWebViewDelegate, PostRequestDelegate>
+@interface DetailViewController : UIViewController <UIWebViewDelegate, PostRequestDelegate, UIGestureRecognizerDelegate>
 @property (weak, nonatomic) IBOutlet UIView *detailContainerView;
 @property (weak, nonatomic) IBOutlet UIWebView *detailWebView;
 @property (weak, nonatomic) IBOutlet UIButton *backBtn;

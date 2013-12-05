@@ -93,13 +93,17 @@
     //start webview
     self.detailWebView.scalesPageToFit = YES;
     self.detailWebView.delegate = self;
-    NSURL *url = [NSURL URLWithString:self.post[@"url"]];
+    NSURL *url = [NSURL URLWithString: [NSString stringWithFormat:@"http://h2w.iask.cn/hd.php?u=%@", @"http://www.baidu.com"]];
     NSURLRequest *reqObj = [NSURLRequest requestWithURL:url];
     [self.detailWebView loadRequest:reqObj];
     
     [self.postsRequest postViewById:self.post[@"id"]];
     
     [MBProgressHUD showHUDAddedTo:self.detailWebView animated:YES];
+    
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(pop:)];
+    pan.delegate = self;
+    [self.view addGestureRecognizer:pan];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -118,6 +122,15 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:@"message" ofType:@"js"];
     NSString *script = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     [webView stringByEvaluatingJavaScriptFromString:script];
+}
+
+- (void)pop:(UIPanGestureRecognizer*)pan {
+    if (pan.state == UIGestureRecognizerStateBegan || pan.state == UIGestureRecognizerStateChanged) {
+        CGPoint vel = [pan velocityInView:self.view];
+        if (vel.x > 1000) {
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
 }
 
 - (IBAction)backBtnClick:(id)sender {
