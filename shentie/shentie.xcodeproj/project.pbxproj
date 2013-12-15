@@ -70,10 +70,10 @@
 		BECFA622184CE22000AA1C9F /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
 		BECFA623184CE22000AA1C9F /* up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = up.png; sourceTree = "<group>"; };
 		BECFA624184CE22000AA1C9F /* up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "up@2x.png"; sourceTree = "<group>"; };
-		BECFA62A184D7C1700AA1C9F /* PostsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostsRequest.h; sourceTree = "<group>"; };
-		BECFA62B184D7C1700AA1C9F /* PostsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostsRequest.m; sourceTree = "<group>"; };
-		BECFA62D184DA69D00AA1C9F /* Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cache.h; sourceTree = "<group>"; };
-		BECFA62E184DA69D00AA1C9F /* Cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cache.m; sourceTree = "<group>"; };
+		BECFA62A184D7C1700AA1C9F /* PostsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostsRequest.h; path = ../PostsRequest.h; sourceTree = "<group>"; };
+		BECFA62B184D7C1700AA1C9F /* PostsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostsRequest.m; path = ../PostsRequest.m; sourceTree = "<group>"; };
+		BECFA62D184DA69D00AA1C9F /* Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cache.h; path = ../Cache.h; sourceTree = "<group>"; };
+		BECFA62E184DA69D00AA1C9F /* Cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Cache.m; path = ../Cache.m; sourceTree = "<group>"; };
 		BED66DB8184B99D2008692DC /* MacroDefinition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MacroDefinition.h; path = ../MacroDefinition.h; sourceTree = "<group>"; };
 		BED66DB9184C3DE4008692DC /* message.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = message.js; sourceTree = "<group>"; };
 		DEDCD36981EC40F1BE65BC2E /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,10 +107,6 @@
 		BE114C59184B725000ECCEC8 = {
 			isa = PBXGroup;
 			children = (
-				BECFA62D184DA69D00AA1C9F /* Cache.h */,
-				BECFA62E184DA69D00AA1C9F /* Cache.m */,
-				BECFA62A184D7C1700AA1C9F /* PostsRequest.h */,
-				BECFA62B184D7C1700AA1C9F /* PostsRequest.m */,
 				BECFA620184CE1D800AA1C9F /* Resources */,
 				BE114C6B184B725000ECCEC8 /* shentie */,
 				BE114C8A184B725000ECCEC8 /* shentieTests */,
@@ -144,6 +140,10 @@
 		BE114C6B184B725000ECCEC8 /* shentie */ = {
 			isa = PBXGroup;
 			children = (
+				BECFA62D184DA69D00AA1C9F /* Cache.h */,
+				BECFA62E184DA69D00AA1C9F /* Cache.m */,
+				BECFA62A184D7C1700AA1C9F /* PostsRequest.h */,
+				BECFA62B184D7C1700AA1C9F /* PostsRequest.m */,
 				BED66DB8184B99D2008692DC /* MacroDefinition.h */,
 				BE114C74184B725000ECCEC8 /* AppDelegate.h */,
 				BE114C75184B725000ECCEC8 /* AppDelegate.m */,

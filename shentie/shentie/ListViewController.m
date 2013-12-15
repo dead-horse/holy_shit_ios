@@ -14,6 +14,7 @@
 - (void)sendMessage:(NSString *)key message:(NSDictionary *)data;
 - (void)dispatchMessage: (NSString *)key message:(NSDictionary *)data;
 @property (strong, nonatomic)NSDictionary *selectedPost;
+@property (strong, nonatomic)UIImageView *loadingImageView;
 
 @end
 
@@ -21,6 +22,18 @@
 @synthesize listWebView = _listWebView;
 @synthesize listContainerView = _listContainerView;
 @synthesize selectedPost = _selectedPost;
+@synthesize loadingImageView = _loadingImageView;
+
+- (UIImageView *)loadingImageView {
+    if (!_loadingImageView) {
+        NSString *launchImageName = SCREEN_HEIGHT > 480.0f ?
+        @"LaunchImage-700-568h" : @"LaunchImage-700";
+        UIImage *loadingImage = [UIImage imageNamed:launchImageName];
+        _loadingImageView = [[UIImageView alloc] initWithImage:loadingImage];
+        _loadingImageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
+    return _loadingImageView;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,6 +50,14 @@
     }
 }
 
+- (void)setLoadingImage {
+    [self.view addSubview:self.loadingImageView];
+}
+
+- (void) removeLoadingImage {
+    [self.loadingImageView removeFromSuperview];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -47,7 +68,7 @@
     NSURL *url = [NSURL URLWithString:LIST_URL];
     NSURLRequest *reqObj = [NSURLRequest requestWithURL:url];
     [self.listWebView loadRequest:reqObj];
-    [MBProgressHUD showHUDAddedTo:self.listWebView animated:YES];
+    [self setLoadingImage];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -55,7 +76,7 @@
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *)webView {
-    [MBProgressHUD hideAllHUDsForView:self.listWebView animated:YES];
+    [self removeLoadingImage];
     
     //remove all cached post
     [Cache removeAllValueByCat:POSTS_PREFIX];
